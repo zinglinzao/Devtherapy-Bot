@@ -1,0 +1,5 @@
+httpx
+pydantic
+pydantic-settings
+py-cord
+loguru

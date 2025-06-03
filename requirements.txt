@@ -1,5 +1,7 @@
-httpx
 pydantic
 pydantic-settings
 py-cord
 loguru
+cloudscraper
+beautifulsoup4
+httpx

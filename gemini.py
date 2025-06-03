@@ -47,7 +47,7 @@ class GeminiAuth(BaseModel):
         )
 
 class GeminiAI:
-    def __init__(self, gemini_auth: GeminiAuth, system_instruction: str, save_state: bool = True):
+    def __init__(self, gemini_auth: GeminiAuth, system_instruction: str, save_state: bool = False):
         self.request_url = gemini_auth.base_url
         self.client = httpx.AsyncClient(headers=gemini_auth.headers)
         self.conversation = GeminiPayload(

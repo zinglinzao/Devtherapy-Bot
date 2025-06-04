@@ -1,3 +1,5 @@
+import datetime
+
 import discord
 from config import BOT, SETTINGS, GEMINI # only import UPPERCASE variables
 from dc_utils import analyze_msgs, send_embed, prettify_payload
@@ -27,9 +29,12 @@ async def summarize_conversation(ctx: discord.Interaction):
         prompt=str(conversation),
         response_schema=ConversationShema
     )
+
     parsed_response: dict = json.loads(res)
+    title, desc = prettify_payload(parsed_response)
+
     await send_embed(ctx, discord.Embed(
-        title="Conversation Summary",
-        description=prettify_payload(parsed_response)
+        title=title,
+        description=desc
     ))
 

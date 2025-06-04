@@ -1,12 +1,12 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from discord import InteractionResponse
 import discord
 import importlib
 import inspect
 
 def time_until_end_of_day() -> datetime:
-    now = datetime.now()
-    end_of_day = datetime(now.year, now.month, now.day - 1, 23, 59, 59)  # Last second of the day
+    now = datetime.now(tz=UTC)
+    end_of_day = datetime(now.year, now.month, now.day - 1, 23, 59, 59, tzinfo=UTC)
     return end_of_day
 
 async def send_embed(ctx: discord.Interaction, embed: discord.Embed):

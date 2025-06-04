@@ -7,7 +7,7 @@ from pydantic.v1.validators import anystr_strip_whitespace
 from config import BOT, SETTINGS, GEMINI
 import re
 
-from dc_utils import prettify_collection
+from dc_utils import prettify_collection_payload
 from scraper import extract_tag_contents
 import json
 
@@ -47,7 +47,7 @@ async def on_message(msg: discord.Message):
             )
         )
         parsed_data = json.loads(res)
-        title, desc = prettify_collection(parsed_data)
+        title, desc = prettify_collection_payload(parsed_data)
     except Exception as e:
         return await msg.reply(embed=Embed(title=f"failed to parse gemini response, details: {e} "))
 

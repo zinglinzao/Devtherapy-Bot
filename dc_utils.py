@@ -20,7 +20,7 @@ async def analyze_msgs(
     logger.info(f"Looking msg history until {cutoff_date}")
     msg_found: list[str] = []
 
-    async for message in channel.history(limit=msg_limit, before=cutoff_date):
+    async for message in channel.history(limit=msg_limit, after=cutoff_date):
         # if we got user as an argument to the function check messages to fileter it out.
         if user and not message.author == user:
             continue
@@ -38,13 +38,15 @@ async def send_embed(
     response: InteractionResponse = ctx.response # providers linting capabilities to the editor
     await response.send_message(embed=embed, ephemeral=True)
 
-def prettify_payload(payload: dict):
-    result = ""
+def prettify_payload(payload: dict[str, str]) -> (str, str):
+    title = ""
+    description = ""
     for key, value in payload.items():
-        result += f"**{key}**: {value}\n"
-    return result
+        title = f"**{" ".join(word.capitalize() for word in key.split("_"))}**: \n"
+        description += f"* {value} \n"
+    return title, description
 
-def prettify_collection(payload: dict[str, list[str]]) -> (str, str): # (title, description)
+def prettify_collection_payload(payload: dict[str, list[str]]) -> (str, str): # (title, description)
     """returns title and description in order to construct discord.Embed"""
     title = ""
     description = ""

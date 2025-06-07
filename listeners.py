@@ -1,58 +1,31 @@
-import discord
-from discord import Embed
+from discord import  Message
 from loguru import logger
-from pydantic import BaseModel
-from pydantic.v1.validators import anystr_strip_whitespace
+from settings import BOT, SETTINGS, DVORAK_GEMINI
+import settings
 
-from config import BOT, SETTINGS, GEMINI
-import re
-
-from dc_utils import prettify_collection_payload
-from scraper import extract_tag_contents
-import json
-
+from plugins.dvorak.ui import TYPE_SESSION_MANAGER, StartView
+from router import scrape_link
 
 # Event listeners are triggered automatically based on what is happening on server
 # all listeners are registered automatically don't add anything that isn't supposed to be an event listener
 
+
 # Subclass BOT object if you want to add state to it
 async def on_ready():
     logger.info(f"Logged in as {BOT.user}")
+    guild = await BOT.fetch_guild(SETTINGS.DISCORD_GUILD_ID)
+    result_channel = await guild.fetch_channel(settings.RESULT_CHANNEL_ID)
+    logger.info("initializing channel")
+    TYPE_SESSION_MANAGER.load_channel(result_channel, settings.DVORAK_CHANNEL_ID)
+    view = StartView(DVORAK_GEMINI, TYPE_SESSION_MANAGER)
+    BOT.add_view(view)
 
-async def on_message(msg: discord.Message):
-    link_regex = r"https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)"
-    if not msg.author.id == SETTINGS.ROMAN_USER_ID: # Ignore any other messages
+async def on_message(msg: Message):
+    if msg.author.id == BOT.user.id:
         return
 
-    link_collection = list(re.findall(link_regex, msg.content))
-    if not link_collection:
-        return
-    
-    collected_data: list[str] = []
-    for link in link_collection:
-        try:
-            collected_data.append(extract_tag_contents(link))
-        except Exception as e:
-            return await msg.reply(embed=Embed(title=f"failed to fetch provided link, details: {e} "))
+    is_executed = await TYPE_SESSION_MANAGER.is_check_condition(msg)
+    if is_executed: return
 
-    class BulletPoints(BaseModel):
-        article_bullet_points: list[str]
-
-    try:
-        res = await (
-            GEMINI
-                .send_prompt(f""
-                f"return as few bullet points as possible without sacrificing any important information. data:{str(collected_data)}",
-                response_schema=BulletPoints
-            )
-        )
-        parsed_data = json.loads(res)
-        title, desc = prettify_collection_payload(parsed_data)
-    except Exception as e:
-        return await msg.reply(embed=Embed(title=f"failed to parse gemini response, details: {e} "))
-
-    return await msg.reply(embed=Embed(title=title, description=desc))
-
-
-
-
+    if msg.author.id == SETTINGS.ROMAN_USER_ID:
+        await scrape_link(msg)

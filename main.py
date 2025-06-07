@@ -1,5 +1,5 @@
 from discord import SlashCommand
-from config import BOT, SETTINGS
+from settings import BOT, SETTINGS
 from utils import import_functions
 
 # use refactoring tools if you change filenames or adjust settings here
@@ -20,6 +20,6 @@ dc_listeners = import_functions("listeners")
 [BOT.add_listener(func) for func in dc_listeners]
 
 if __name__ == "__main__":
-    BOT.run(SETTINGS.DISCORD_BOT_TOKEN)  # Replace with your actual bot token
+    BOT.run(SETTINGS.DISCORD_BOT_TOKEN)
 
 

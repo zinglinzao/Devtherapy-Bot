@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str
     DISCORD_BOT_TOKEN: str
     ROMAN_USER_ID: int
+
 SETTINGS = Settings()
 
 # -- Gemini Configuration --
@@ -20,7 +21,8 @@ gemini_auth = GeminiAuth.new(
     model="gemini-2.0-flash-lite",  # // Check gemini docs for available models
     headers=None,
 )
-GEMINI = GeminiAI(
+
+LINK_SCRAPER_GEMINI = GeminiAI(
     gemini_auth=gemini_auth,
     system_instruction=f"""
 you are useful conversation summarizer api, return
@@ -30,9 +32,21 @@ use georgian language
 """,
     save_state=False
 )
+DVORAK_GEMINI = GeminiAI(
+    gemini_auth=gemini_auth,
+    system_instruction="",
+    save_state=False
+)
+
+
 # -- Discord Bot Configuration --
 intents = Intents.all()  # TODO Limit Intents to only what it needs
 BOT = Bot(intents=intents)
 
 # -- Scraper Config --
 SCRAPER_CLIENT = AsyncClient()
+
+# -- Plugin Config --
+DVORAK_CHANNEL_ID = 1379839400242053243
+RESULT_CHANNEL_ID = 1380175736391995562
+

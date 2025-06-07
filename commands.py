@@ -1,10 +1,16 @@
 import datetime
 
 import discord
-from config import BOT, SETTINGS, GEMINI # only import UPPERCASE variables
+from discord import TextChannel
+
+from settings import BOT, SETTINGS, LINK_SCRAPER_GEMINI, DVORAK_GEMINI  # only import UPPERCASE variables
 from dc_utils import analyze_msgs, send_embed, prettify_payload
 from models import RomanSchema, ConversationShema
+from plugins.dvorak import ui
 import json
+from gemini import GeminiAI, GeminiAuth
+from plugins.dvorak.ui import TYPE_SESSION_MANAGER
+
 
 # ctx parameter contains BOT object, if you want to add custom state Subclass BOT in configuration
 # all command are registered automatically don't add anything that isn't supposed to be a slash command
@@ -23,9 +29,20 @@ import json
 #         description=prettify_payload(parsed_response)
 #     ))
 
+
+async def send_dvorak(ctx: discord.Interaction):
+    """
+    command is supposed to be used only once
+    :param ctx:
+    :return:
+    """
+    interaction_channel: TextChannel = ctx.channel
+    view = ui.StartView(DVORAK_GEMINI, TYPE_SESSION_MANAGER)
+    await interaction_channel.send(view=view, embed=view.embed)
+
 async def summarize_conversation(ctx: discord.Interaction):
     conversation: list[str] = await analyze_msgs(ctx)
-    res = await GEMINI.send_prompt(
+    res = await LINK_SCRAPER_GEMINI.send_prompt(
         prompt=str(conversation),
         response_schema=ConversationShema
     )

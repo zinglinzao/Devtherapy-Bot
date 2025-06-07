@@ -5,11 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "beautifulsoup4>=4.13.4",
-    "cloudscraper>=1.2.71",
-    "httpx>=0.28.1",
-    "loguru>=0.7.3",
-    "py-cord>=2.6.1",
-    "pydantic>=2.11.5",
-    "pydantic-settings>=2.9.1",
+  "beautifulsoup4>=4.13.4",
+  "cloudscraper>=1.2.71",
+  "httpx>=0.28.1",
+  "loguru>=0.7.3",
+  "py-cord>=2.6.1",
+  "pydantic>=2.11.5",
+  "pydantic-settings>=2.9.1",
 ]
+[tool.pyright]
+venvPath = "./"
+venv = ".venv"
+

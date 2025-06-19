@@ -7,18 +7,18 @@ from httpx import AsyncClient
 # -- Settings Configuration --
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".test.env")
+    model_config = SettingsConfigDict(env_file=".env")
     GEMINI_API_KEY: str
     DISCORD_BOT_TOKEN: str
 
 # -- Plugin Config --
 PLUGIN_CONFIG = {
     # Dvorak
-    "DISCORD_GUILD_ID": 1379030683783139348,
-    "TARGET_CHANNEL_ID": 1380175736391995562,
-    "RESULT_CHANNEL_ID": 1380175736391995562,
+    "DISCORD_GUILD_ID": 1336807767561732229,
+    "TARGET_CHANNEL_ID": 1380194215010631792,
+    "RESULT_CHANNEL_ID": 1380194215010631792,
     # Scraper
-    "LINK_CHANNEL_ID": 1380710089836728420
+    "LINK_CHANNEL_ID": 1354891570545164328
 }
 
 SETTINGS = Settings()

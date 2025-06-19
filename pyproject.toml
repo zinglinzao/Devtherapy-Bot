@@ -5,15 +5,25 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+  "aiosqlite>=0.21.0",
   "beautifulsoup4>=4.13.4",
+  "click>=8.2.1",
   "cloudscraper>=1.2.71",
   "httpx>=0.28.1",
   "loguru>=0.7.3",
   "py-cord>=2.6.1",
   "pydantic>=2.11.5",
   "pydantic-settings>=2.9.1",
+  "sqlalchemy>=2.0.41",
 ]
+
 [tool.pyright]
 venvPath = "./"
 venv = ".venv"
 
+reportMissingTypeStubs = false
+reportArgumentType = false
+reportOptionalMemberAccess = false
+reportAttributeAccessIssue = false
+reportIncompatibleMethodOverride = false
+reportGeneralTypeIssues = false

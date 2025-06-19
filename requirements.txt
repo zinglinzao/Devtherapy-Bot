@@ -5,3 +5,5 @@ loguru
 cloudscraper
 beautifulsoup4
 httpx
+aiosqlite
+sqlalchemy

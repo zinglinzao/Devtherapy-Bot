@@ -4,14 +4,22 @@ from discord import Bot, Intents
 from httpx import AsyncClient
 
 # Consider UPPERCASE Variables exportable
-
 # -- Settings Configuration --
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env")
-    DISCORD_GUILD_ID: int
+    model_config = SettingsConfigDict(env_file=".test.env")
     GEMINI_API_KEY: str
     DISCORD_BOT_TOKEN: str
-    ROMAN_USER_ID: int
+
+# -- Plugin Config --
+PLUGIN_CONFIG = {
+    # Dvorak
+    "DISCORD_GUILD_ID": 1379030683783139348,
+    "TARGET_CHANNEL_ID": 1380175736391995562,
+    "RESULT_CHANNEL_ID": 1380175736391995562,
+    # Scraper
+    "LINK_CHANNEL_ID": 1380710089836728420
+}
 
 SETTINGS = Settings()
 
@@ -30,14 +38,11 @@ you are useful conversation summarizer api, return
 2. what was the conversation about
 use georgian language
 """,
-    save_state=False
+    save_state=False,
 )
 DVORAK_GEMINI = GeminiAI(
-    gemini_auth=gemini_auth,
-    system_instruction="",
-    save_state=False
+    gemini_auth=gemini_auth, system_instruction="", save_state=False
 )
-
 
 # -- Discord Bot Configuration --
 intents = Intents.all()  # TODO Limit Intents to only what it needs
@@ -46,7 +51,5 @@ BOT = Bot(intents=intents)
 # -- Scraper Config --
 SCRAPER_CLIENT = AsyncClient()
 
-# -- Plugin Config --
-DVORAK_CHANNEL_ID = 1379839400242053243
-RESULT_CHANNEL_ID = 1380175736391995562
+
 

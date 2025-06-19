@@ -4,12 +4,17 @@ from discord.ui import View
 from discord import Interaction
 import discord
 
-from dc_utils import send_embed
 from gemini import GeminiAI
-from plugins.dvorak import utils
-from plugins.dvorak.utils import qwerty_from_dvorak, get_average_score
 from loguru import logger
 
+from plugins.dvorak.core import qwerty_from_dvorak, get_average_score
+from plugins.dvorak import core
+from discord import InteractionResponse
+
+async def send_embed(ctx: Interaction, embed: Embed, ephemeral: bool = False):
+    # providers linting capabilities to the editor
+    response: InteractionResponse = ctx.response
+    await response.send_message(embed=embed, ephemeral=ephemeral)
 
 def format_numbers(sentence, numbers):
     words = sentence.split()
@@ -23,10 +28,11 @@ def format_numbers(sentence, numbers):
 
     return "\n".join(mapped_pairs)
 
-
 class TypeSessionManager:
     def __init__(self):
         self.users = {}
+        self.dvorak_channel_id = None
+        self.result_channel = None
 
     def load_channel(self, result_channel: discord.TextChannel, dvorak_channel_id: int):
         self.dvorak_channel_id = dvorak_channel_id
@@ -49,8 +55,8 @@ class TypeSessionManager:
                 embed=Embed(title="create session first")
             )
 
-        converted_sentence = qwerty_from_dvorak(dvorak_sentence, utils.mapping)
-        word_score_collection = utils.calculate_word_similarity(
+        converted_sentence = qwerty_from_dvorak(dvorak_sentence, core.mapping)
+        word_score_collection = core.calculate_word_similarity(
             user_sentence, converted_sentence
         )
         average_score = get_average_score(word_score_collection)
@@ -89,9 +95,8 @@ class StartView(View):
 
     @discord.ui.button(label="start", style=style.green, custom_id="startType")
     async def start(self, _, interaction: Interaction):
-        sentence = await utils.sentence_generator(self.gemini)
-        await send_embed(embed=Embed(title=sentence), ctx=interaction)
+        sentence = await core.sentence_generator(self.gemini)
+        await send_embed(embed=Embed(title=sentence), ctx=interaction, ephemeral=True)
         self.type_session.sentence_submit(interaction.user.id, sentence)
-
 
 TYPE_SESSION_MANAGER = TypeSessionManager()

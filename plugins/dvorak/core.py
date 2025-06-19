@@ -2,8 +2,12 @@ import json
 from pydantic import BaseModel
 from gemini import GeminiAI
 import difflib
-import random
+from discord import Interaction, Embed, InteractionResponse
 
+async def send_embed(ctx: Interaction, embed: Embed, ephemeral: bool = False):
+    # providers linting capabilities to the editor
+    response: InteractionResponse = ctx.response
+    await response.send_message(embed=embed, ephemeral=ephemeral)
 
 def calculate_similarity_percentage(reference: str, compared: str) -> float:
     """

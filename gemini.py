@@ -94,7 +94,7 @@ class SessionManager:
     def get_session(self, session_id: str) -> GeminiAI | str:
         gemini_instance = self.sessions.get(session_id)
         if not gemini_instance:
-            return "session Expaired"
+            return "session Expired"
         return gemini_instance
 
     async def _expire_session(self, session_id: str, secs: int):

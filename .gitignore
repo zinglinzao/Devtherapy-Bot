@@ -17,3 +17,4 @@ env/
 *.sublime-project
 
 uv.lock
+.envs/
